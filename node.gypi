@@ -382,7 +382,11 @@
               ],
             }],
           ],
-        }]]
+        }, {
+          # Set the 1.1.1 as the API compability level until to avoid the
+          # deprecation warnings when using OpenSSL 3.x.
+	  'defines': ['OPENSSL_API_COMPAT=0x1010107fL'],
+	}]]
 
     }, {
       'defines': [ 'HAVE_OPENSSL=0' ]
