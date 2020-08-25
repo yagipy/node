@@ -157,7 +157,7 @@ assert.strictEqual(secret1, secret4);
 let wrongBlockLength;
 if (common.hasOpenSSL3) {
   wrongBlockLength = {
-    message: 'error:3900006B:Provider routines::wrong final block length',
+    message: 'error:1C80006B:Provider routines::wrong final block length',
     code: 'ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH',
     library: 'Provider routines',
     reason: 'wrong final block length'
@@ -190,7 +190,7 @@ if (common.hasOpenSSL3) {
 assert.throws(() => {
   dh3.computeSecret('');
 }, { message: common.hasOpenSSL3 ?
-  'error:05000066:Diffie-Hellman routines::invalid public key' :
+  'error:02800066:Diffie-Hellman routines::invalid public key' :
   'Supplied key is too small'
 });
 
