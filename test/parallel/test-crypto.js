@@ -220,7 +220,7 @@ assert.throws(() => {
     assert.ok(!('opensslErrorStack' in err));
   assert.throws(() => { throw err; }, common.hasOpenSSL3 ? {
     name: 'Error',
-    message: 'error:04000070:rsa routines::digest too big for rsa key',
+    message: 'error:02000070:rsa routines::digest too big for rsa key',
     library: 'rsa routines',
   } : {
     name: 'Error',
