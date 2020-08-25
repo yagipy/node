@@ -26,7 +26,7 @@ const rsaPkcs8KeyPem = fixtures.readKey('rsa_private_pkcs8.pem');
 const dsaPkcs8KeyPem = fixtures.readKey('dsa_private_pkcs8.pem');
 
 const decryptError = common.hasOpenSSL3 ? {
-  message: 'error:39000064:Provider routines::bad decrypt',
+  message: 'error:1C800064:Provider routines::bad decrypt',
   code: 'ERR_OSSL_BAD_DECRYPT',
   library: 'Provider routines',
 } : {
