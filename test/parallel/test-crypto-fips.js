@@ -127,20 +127,34 @@ if (!sharedOpenSSL()) {
     Object.assign({}, process.env, { 'OPENSSL_CONF': CNF_FIPS_OFF }));
 }
 
-testHelper(
-  'stdout',
-  [`--openssl-config=${CNF_FIPS_OFF}`],
-  FIPS_DISABLED,
-  'require("crypto").getFips()',
-  Object.assign({}, process.env, { 'OPENSSL_CONF': CNF_FIPS_ON }));
+// OpenSSL 3.x has changed the configuration files so the following tests
+// will not work as expected with that version.
+// TODO(danbev) Revisit these test once FIPS support is available in
+// OpenSSL 3.x.
+if (!common.hasOpenSSL3) {
+  testHelper(
+    'stdout',
+    [`--openssl-config=${CNF_FIPS_OFF}`],
+    FIPS_DISABLED,
+    'require("crypto").getFips()',
+    Object.assign({}, process.env, { 'OPENSSL_CONF': CNF_FIPS_ON }));
 
-// --enable-fips should take precedence over OpenSSL config file
-testHelper(
-  compiledWithFips() ? 'stdout' : 'stderr',
-  ['--enable-fips', `--openssl-config=${CNF_FIPS_OFF}`],
-  compiledWithFips() ? FIPS_ENABLED : OPTION_ERROR_STRING,
-  'require("crypto").getFips()',
-  process.env);
+  // --enable-fips should take precedence over OpenSSL config file
+  testHelper(
+    compiledWithFips() ? 'stdout' : 'stderr',
+    ['--enable-fips', `--openssl-config=${CNF_FIPS_OFF}`],
+    compiledWithFips() ? FIPS_ENABLED : OPTION_ERROR_STRING,
+    'require("crypto").getFips()',
+    process.env);
+
+  // --force-fips should take precedence over OpenSSL config file
+  testHelper(
+    compiledWithFips() ? 'stdout' : 'stderr',
+    ['--force-fips', `--openssl-config=${CNF_FIPS_OFF}`],
+    compiledWithFips() ? FIPS_ENABLED : OPTION_ERROR_STRING,
+    'require("crypto").getFips()',
+    process.env);
+}
 
 // OPENSSL_CONF should _not_ make a difference to --enable-fips
 testHelper(
@@ -149,14 +163,6 @@ testHelper(
   compiledWithFips() ? FIPS_ENABLED : OPTION_ERROR_STRING,
   'require("crypto").getFips()',
   Object.assign({}, process.env, { 'OPENSSL_CONF': CNF_FIPS_OFF }));
-
-// --force-fips should take precedence over OpenSSL config file
-testHelper(
-  compiledWithFips() ? 'stdout' : 'stderr',
-  ['--force-fips', `--openssl-config=${CNF_FIPS_OFF}`],
-  compiledWithFips() ? FIPS_ENABLED : OPTION_ERROR_STRING,
-  'require("crypto").getFips()',
-  process.env);
 
 // Using OPENSSL_CONF should not make a difference to --force-fips
 testHelper(
