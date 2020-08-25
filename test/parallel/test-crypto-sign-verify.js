@@ -64,7 +64,7 @@ const keySize = 2048;
         padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
       });
   }, { message: common.hasOpenSSL3 ?
-    'error:390000A5:Provider routines::illegal or unsupported padding mode' :
+    'error:1C8000A5:Provider routines::illegal or unsupported padding mode' :
     'bye, bye, error stack' });
 
   delete Object.prototype.opensslErrorStack;
