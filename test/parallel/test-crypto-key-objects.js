@@ -212,7 +212,7 @@ const privateDsa = fixtures.readKey('dsa_private_encrypted_1025.pem',
   assert.throws(() => {
     createPrivateKey({ key: '' });
   }, common.hasOpenSSL3 ? {
-    message: 'error:20000073:BIO routines::null parameter',
+    message: 'error:10000073:BIO routines::null parameter',
     code: 'ERR_OSSL_BIO_NULL_PARAMETER',
     reason: 'null parameter',
     library: 'BIO routines',
@@ -288,7 +288,7 @@ const privateDsa = fixtures.readKey('dsa_private_encrypted_1025.pem',
   assert.throws(() => createPrivateKey(privateDsa), common.hasOpenSSL3 ? {
     name: 'Error',
     code: 'ERR_OSSL_OSSL_STORE_UI_PROCESS_INTERRUPTED_OR_CANCELLED',
-    message: 'error:2C00006D:STORE routines::' +
+    message: 'error:1600006D:STORE routines::' +
       'ui process interrupted or cancelled'
   } : {
     name: 'TypeError',
@@ -317,7 +317,7 @@ const privateDsa = fixtures.readKey('dsa_private_encrypted_1025.pem',
     passphrase: Buffer.alloc(1024, 'a')
   }), {
     message: common.hasOpenSSL3 ?
-      'error:2C00006D:STORE routines::ui process interrupted or cancelled' :
+      'error:1600006D:STORE routines::ui process interrupted or cancelled' :
       /bad decrypt/
   });
 
