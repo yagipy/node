@@ -170,7 +170,7 @@ for (const options of bad) {
 for (const options of toobig) {
   const expected = {
     message: common.hasOpenSSL3 ?
-      'error:060000AC:digital envelope routines::memory limit exceeded' :
+      'error:030000AC:digital envelope routines::memory limit exceeded' :
       new RegExp('error:[^:]+:digital envelope routines:' +
                         '(?:EVP_PBE_scrypt|scrypt_alg):memory limit exceeded'),
     name: 'Error',
