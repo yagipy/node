@@ -7,6 +7,7 @@ const path = require('path');
 const tmpdir = require('../common/tmpdir');
 const assert = require('assert');
 const tmpDir = tmpdir.path;
+const { Readable } = require("stream");
 
 tmpdir.refresh();
 
@@ -14,6 +15,21 @@ const dest = path.resolve(tmpDir, 'tmp.txt');
 const otherDest = path.resolve(tmpDir, 'tmp-2.txt');
 const buffer = Buffer.from('abc'.repeat(1000));
 const buffer2 = Buffer.from('xyz'.repeat(1000));
+const stream = Readable.from(["abc".repeat(1000)]);
+const iterable = {
+  [Symbol.iterator]:function* () {
+    yield "a";
+    yield "b";
+    yield "c";
+  }
+};
+const asyncIterable = {
+  async* [Symbol.asyncIterator]() {
+    yield "a";
+    yield "b";
+    yield "c";
+  }
+};
 
 async function doWrite() {
   await fsPromises.writeFile(dest, buffer);
@@ -50,9 +66,36 @@ async function doReadWithEncoding() {
   assert.deepStrictEqual(data, syncData);
 }
 
+async function doWriteStream() {
+  await fsPromises.writeFile(dest, stream);
+  let result = "";
+  for await (const v of stream) result += v;
+  const data = fs.readFileSync(dest);
+  assert.deepStrictEqual(data, result);
+}
+
+async function doWriteIterable() {
+  await fsPromises.writeFile(dest, iterable);
+  let result = "";
+  for await (const v of iterable) result += v;
+  const data = fs.readFileSync(dest);
+  assert.deepStrictEqual(data, result);
+}
+
+async function doWriteAsyncIterable() {
+  await fsPromises.writeFile(dest, asyncIterable);
+  let result = "";
+  for await (const v of iterable) result += v;
+  const data = fs.readFileSync(dest);
+  assert.deepStrictEqual(data, result);
+}
+
 doWrite()
   .then(doWriteWithCancel)
   .then(doAppend)
   .then(doRead)
   .then(doReadWithEncoding)
+  .then(doWriteStream)
+  .then(doWriteIterable)
+  .then(doWriteAsyncIterable)
   .then(common.mustCall());
