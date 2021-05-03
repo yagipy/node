@@ -3915,7 +3915,8 @@ changes:
 -->
 
 * `file` {string|Buffer|URL|integer} filename or file descriptor
-* `data` {string|Buffer|TypedArray|DataView|Object}
+* `data` {string|Buffer|TypedArray|DataView|Object
+  |AsyncIterable|Iterable|Stream}
 * `options` {Object|string}
   * `encoding` {string|null} **Default:** `'utf8'`
   * `mode` {integer} **Default:** `0o666`
